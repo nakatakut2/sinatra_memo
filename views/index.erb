@@ -1,5 +1,7 @@
 <a href="/memo-app/new">追加</a>
 
 <ul>
-  <%= @index_html %>
+  <% @hash.each do |key, value| %>
+    <li><a href="/memo-app/<%= key %>"><%= value['title'] %></a></li>
+  <% end %>
 </ul>

@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
+require 'erb'
 
 # JSONファイル読み込み
 def read_memo
@@ -10,17 +11,13 @@ def read_memo
 end
 
 # JSONファイル上書き
-def dump_memo(hash)
+def write_memo(hash)
   File.open('memos.json', 'w') { |file| JSON.dump(hash, file) }
 end
 
 # トップページ。メモのタイトル一覧
 get '/memo-app' do
-  @index_html = ''
-  hash = read_memo
-  hash.each do |key, value|
-    @index_html += "<li><a href=\"/memo-app/#{key}\">#{value['title']}</a></li>"
-  end
+  @hash = read_memo
   erb :index
 end
 
@@ -33,11 +30,11 @@ end
 post '/memo-app' do
   id = 1
   hash = read_memo
-  id_count = []
-  hash.each_key { |key| id_count << key.to_i }
-  id += 1 while id_count.include?(id)
+  ids = []
+  hash.each_key { |key| ids << key.to_i }
+  id += 1 while ids.include?(id)
   hash[id] = { 'title' => params[:title], 'content' => params[:content] }
-  dump_memo(hash)
+  write_memo(hash)
   redirect '/memo-app'
 end
 
@@ -46,13 +43,13 @@ get '/memo-app/:id' do
   hash = read_memo
   @id = params[:id]
   @title = hash[params[:id]]['title']
-  @content = escape_xss(hash[params[:id]]['content'])
+  @content = escape_indention(hash[params[:id]]['content'])
   erb :detail
 end
 
 # メモ詳細を出力する時のXSS対策と改行のメソッド。
-def escape_xss(text)
-  text.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub('\'', '&#39;').gsub('\"', '&quot;').gsub("\r\n", '<br>')
+def escape_indention(text)
+  html_escape(text).gsub("\r\n", '<br>')
 end
 
 # 詳細ページの「変更」を押した先の編集ページ。
@@ -68,7 +65,7 @@ end
 patch '/memo-app/:id' do
   hash = read_memo
   hash[params[:id]] = { 'title' => params[:title], 'content' => params[:content] }
-  dump_memo(hash)
+  write_memo(hash)
   redirect '/memo-app'
 end
 
@@ -76,6 +73,6 @@ end
 delete '/memo-app/:id' do
   hash = read_memo
   hash.delete(params[:id])
-  dump_memo(hash)
+  write_memo(hash)
   redirect '/memo-app'
 end
