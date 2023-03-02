@@ -3,7 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
-require 'erb'
+require 'cgi'
 
 # JSONファイル読み込み
 def read_memo
@@ -43,13 +43,8 @@ get '/memo-app/:id' do
   hash = read_memo
   @id = params[:id]
   @title = hash[params[:id]]['title']
-  @content = escape_indention(hash[params[:id]]['content'])
+  @content = CGI.escape_html(hash[params[:id]]['content'])
   erb :detail
-end
-
-# メモ詳細を出力する時のXSS対策と改行のメソッド。
-def escape_indention(text)
-  html_escape(text).gsub("\r\n", '<br>')
 end
 
 # 詳細ページの「変更」を押した先の編集ページ。
