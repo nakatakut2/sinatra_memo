@@ -1,0 +1,19 @@
+<p>
+  <label for="title">【タイトル】</label><br>
+  <%= @title %>
+</p>
+<p>
+  <label for="content">【内容】</label><br>
+  <%= @content %>
+</p>
+
+<p>
+  <a href="/memo-app/<%= @id %>/edit">変更</a>
+</p>
+
+<p>
+  <form method="post" action="/memo-app/<%= @id %>">
+  <input type="submit" value="削除">
+  <input type="hidden" name="_method" value="delete">
+  </form>
+</p>

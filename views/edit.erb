@@ -1,0 +1,14 @@
+<form method="post" action="/memo-app/<%= @id %>">
+<p>
+  <label for="title">【タイトル】</label><br>
+  <input type="text" name="title" value="<%= @title %>">
+</p>
+<p>
+  <label for="content">【内容】</label><br>
+  <textarea name="content" rows="10"><%= @content %></textarea>
+</p>
+<p>
+  <input type="submit" value="変更">
+  <input type="hidden" name="_method" value="patch">
+</p>
+</form>
