@@ -23,14 +23,7 @@ end
 
 # 新規作成ページで「追加」を押す操作。トップページにリダイレクト。
 post '/memo-app' do
-  id = 1
-  hash = connection.exec('SELECT * FROM memo;')
-  ids = []
-  hash.each do |row|
-    ids << row['id'].to_i
-  end
-  id += 1 while ids.include?(id)
-  connection.exec_params('INSERT INTO memo (id, title, content) VALUES ($1, $2, $3)', [id, params[:title], params[:content]])
+  connection.exec_params('INSERT INTO memo (title, content) VALUES ($1, $2)', [params[:title], params[:content]])
   redirect '/memo-app'
 end
 
