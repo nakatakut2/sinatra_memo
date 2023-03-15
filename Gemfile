@@ -2,11 +2,12 @@
 
 source 'https://rubygems.org'
 
-gem 'erb_lint', require: false
+gem 'pg'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'webrick'
 
 group :development do
+  gem 'erb_lint', require: false
   gem 'rubocop-fjord', require: false
 end

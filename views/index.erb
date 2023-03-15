@@ -1,7 +1,7 @@
 <a href="/memo-app/new">追加</a>
 
 <ul>
-  <% @hash.each do |key, value| %>
-    <li><a href="/memo-app/<%= key %>"><%= value['title'] %></a></li>
+  <% @result.each do |row| %>
+    <li><a href="/memo-app/<%= row['id'] %>"><%= CGI.escape_html(row['title']) %></a></li>
   <% end %>
 </ul>
